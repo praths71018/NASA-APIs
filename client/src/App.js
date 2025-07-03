@@ -23,7 +23,7 @@ const App = () => {
       if (sol) params.sol = sol;
       if (earthDate) params.earth_date = earthDate;
       console.log('🔍 Sending request to backend with:', params);
-      const res = await axios.get('http://localhost:8080/api/photos/search', { params });
+      const res = await axios.get(`${process.env.REACT_APP_SERVER_URL}/photos/search`, { params });
       setPhotos(res.data.photos);
       setSource(res.data.source);
     } catch (err) {
