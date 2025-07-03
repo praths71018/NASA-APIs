@@ -12,7 +12,7 @@ require('dotenv').config();
 // const db_password = process.env.MONGO_PASSWORD || 'your_default_password'; // Use your MongoDB password here
 
 const app = express();
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 // ✅ 1. Middleware to log all incoming requests
 app.use((req, res, next) => {
@@ -22,7 +22,7 @@ app.use((req, res, next) => {
 
 // ✅ 2. Enable CORS for frontend at localhost:3000
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000', // Use environment variable or default to localhost
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type'],
 }));
@@ -53,5 +53,5 @@ app.use((err, req, res, next) => {
 
 // ✅ 7. Start the server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+  console.log(`🚀 Server running at port ${PORT}`);
 });
