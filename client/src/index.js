@@ -4,12 +4,9 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import * as Sentry from '@sentry/react';
-import { Integrations } from '@sentry/tracing';
-
 
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN, // store in .env
-  integrations: [new Integrations()],
   sendDefaultPii: true,
 });
 
