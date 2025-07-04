@@ -21,9 +21,6 @@ Sentry.init({
   sendDefaultPii: true,
 });
 
-// ✅ 2. Request Handler middleware — must come first!
-app.use(Sentry.Handlers.requestHandler());
-
 // ✅ 1. Middleware to log all incoming requests
 app.use((req, res, next) => {
   console.log(`➡ ${req.method} ${req.url}`);
@@ -55,15 +52,13 @@ app.get('/', (req, res) => {
 // ✅ 5. Use photo routes
 app.use('/api/photos', photoRoutes);
 
-
-
 // ✅ 7. Example Error Endpoint
 app.get("/debug-sentry", function mainHandler(req, res) {
   throw new Error("My first Sentry error!");
 });
 
 // ✅ 8. Error Handler (must come *after* routes)
-app.use(Sentry.Handlers.errorHandler());
+Sentry.setupExpressErrorHandler(app);
 
 // ✅ 6. Global Error Handler
 app.use((err, req, res, next) => {
