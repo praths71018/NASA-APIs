@@ -81,6 +81,8 @@ const App = () => {
         <button type="submit" className="col-span-2 bg-blue-600 text-white p-2 rounded">Search</button>
       </form>
 
+      <button onClick={() => {throw new Error("This is your first error!");}}>Break the world</button>;
+
       {loading && <p className="mt-4">Loading photos...</p>}
       {!loading && photos.length > 0 && (
         <>

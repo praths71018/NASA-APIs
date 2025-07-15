@@ -11,6 +11,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@sentry/cli": "^2.46.0",
+    "@sentry/node": "^9.34.0",
     "axios": "^1.10.0",
     "cors": "^2.8.5",
     "dotenv": "^17.0.1",

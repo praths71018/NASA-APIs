@@ -1,3 +1,4 @@
+const Sentry = require("@sentry/node");
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -13,6 +14,12 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+
+// ✅ 1. Sentry Initialization
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  sendDefaultPii: true,
+});
 
 // ✅ 1. Middleware to log all incoming requests
 app.use((req, res, next) => {
@@ -45,7 +52,15 @@ app.get('/', (req, res) => {
 // ✅ 5. Use photo routes
 app.use('/api/photos', photoRoutes);
 
-// ✅ 6. Global error handler (for debugging)
+// ✅ 7. Example Error Endpoint
+app.get("/debug-sentry", function mainHandler(req, res) {
+  throw new Error("My first Sentry error!");
+});
+
+// ✅ 8. Error Handler (must come *after* routes)
+Sentry.setupExpressErrorHandler(app);
+
+// ✅ 6. Global Error Handler
 app.use((err, req, res, next) => {
   console.error('💥 Global Error:', err);
   res.status(500).json({ error: 'Internal Server Error' });

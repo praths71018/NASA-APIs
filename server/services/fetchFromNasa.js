@@ -28,7 +28,7 @@ async function fetchMarsPhotos({ rover, sol, earth_date, camera, page }) {
 
   if (page) {
     query.page = page;
-    dbQuery.page = page;
+    dbQuery.page = page;2
   }
 
   // ✅ 1. Check MongoDB Cache

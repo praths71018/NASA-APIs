@@ -3,11 +3,19 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import * as Sentry from '@sentry/react';
+
+Sentry.init({
+  dsn: process.env.REACT_APP_SENTRY_DSN, // store in .env
+  sendDefaultPii: true,
+});
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <Sentry.ErrorBoundary fallback={<p>An error has occurred.</p>} showDialog>
+      <App />
+    </Sentry.ErrorBoundary>
   </React.StrictMode>
 );
 
