@@ -177,3 +177,116 @@ Referred from : [How To Deploy Full Stack React App For Free | Deploy MERN Stack
 2. Test your search form — it should hit the backend hosted on Render
 
 ---
+
+## Configuring Sentry for the Webapp
+
+Here's how you can add **Sentry** to your **MERN stack webapp** for **error tracking**:
+
+---
+
+### ✅ Step 1: Sign Up and Create Project on Sentry
+
+1. Go to [https://sentry.io](https://sentry.io)
+2. Create an account
+3. Click “**Create Project**”
+4. Choose **React** for frontend and **Node.js** for backend
+5. Copy the DSN (Data Source Name) for each — you’ll use this in `.env`
+
+---
+
+### ✅ Step 2: Add Sentry to Your **Frontend (React)**
+
+#### 🔧 1. Install SDK:
+
+```bash
+npm install @sentry/react @sentry/tracing
+```
+
+#### 🔧 2. Initialize Sentry in `src/index.js` or `src/main.jsx`:
+
+```js
+import * as Sentry from "@sentry/react";
+import { BrowserTracing } from "@sentry/tracing";
+
+Sentry.init({
+  dsn: process.env.REACT_APP_SENTRY_DSN, // store in .env
+  integrations: [new BrowserTracing()],
+  tracesSampleRate: 1.0,
+});
+```
+
+#### 🔧 3. Handle errors manually (optional):
+
+```js
+try {
+  // something buggy
+} catch (e) {
+  Sentry.captureException(e);
+}
+```
+
+---
+
+### ✅ Step 3: Add Sentry to Your **Backend (Express)**
+
+#### 🔧 1. Install SDK:
+
+```bash
+npm install @sentry/node
+```
+
+#### 🔧 2. Add to `server.js` (or wherever Express is initialized):
+
+```js
+const Sentry = require('@sentry/node');
+Sentry.init({
+  dsn: process.env.SENTRY_DSN, // server-side DSN in .env
+});
+
+// Request handler must be first
+
+// Your routes here...
+
+// Example Error Endpoint
+app.get("/debug-sentry", function mainHandler(req, res) {
+  throw new Error("My first Sentry error!");
+});
+
+// ✅ 8. Error Handler (must come *after* routes)
+Sentry.setupExpressErrorHandler(app);
+
+#### 🔧 3. Manually log errors if needed:
+
+```js
+try {
+  // something wrong
+} catch (err) {
+  Sentry.captureException(err);
+}
+```
+
+---
+
+### ✅ Step 4: Set up `.env` Files
+
+#### `.env.production.local` in React:
+
+```
+REACT_APP_SENTRY_DSN=https://your-frontend-dsn@o0.ingest.sentry.io/0
+```
+
+#### `.env` in Backend:
+
+```
+SENTRY_DSN=https://your-backend-dsn@o0.ingest.sentry.io/0
+```
+
+---
+
+### ✅ Step 5: Deploy and Test
+
+1. Deploy your app
+2. Trigger an error (like divide by 0 or `undefined.map()`)
+3. Go to Sentry dashboard — you'll see logs with **stack trace, user agent, route**, etc.
+
+---
